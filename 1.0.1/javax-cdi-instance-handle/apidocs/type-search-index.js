@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"com.github.jonasrutishauser.javax.enterprise.inject","l":"ExtendedInstance"},{"p":"com.github.jonasrutishauser.javax.enterprise.inject.impl","l":"ExtendedInstanceExtension"},{"p":"com.github.jonasrutishauser.javax.enterprise.inject","l":"ExtendedInstance.Handle"}]
