@@ -26,7 +26,7 @@ class InstanceType implements ParameterizedType {
 
     @Override
     public Type getOwnerType() {
-<span class="nc" id="L29">        return null;</span>
+<span class="fc" id="L29">        return null;</span>
     }
 
     @Override
@@ -39,10 +39,10 @@ class InstanceType implements ParameterizedType {
 <span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (this == obj) {</span>
 <span class="nc" id="L40">            return true;</span>
         }
-<span class="pc bpc" id="L42" title="1 of 2 branches missed.">        if (obj instanceof ParameterizedType) {</span>
-<span class="nc" id="L43">            ParameterizedType other = (ParameterizedType) obj;</span>
-<span class="nc bnc" id="L44" title="All 4 branches missed.">            return other.getOwnerType() == null &amp;&amp; Instance.class.equals(other.getRawType())</span>
-<span class="nc bnc" id="L45" title="All 2 branches missed.">                    &amp;&amp; Arrays.equals(types, other.getActualTypeArguments());</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (obj instanceof ParameterizedType) {</span>
+<span class="fc" id="L43">            ParameterizedType other = (ParameterizedType) obj;</span>
+<span class="pc bpc" id="L44" title="2 of 4 branches missed.">            return other.getOwnerType() == null &amp;&amp; Instance.class.equals(other.getRawType())</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">                    &amp;&amp; Arrays.equals(types, other.getActualTypeArguments());</span>
         }
 <span class="fc" id="L47">        return false;</span>
     }
