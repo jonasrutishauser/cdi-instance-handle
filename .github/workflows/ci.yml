@@ -73,7 +73,7 @@ jobs:
             ${{ runner.os }}-m2-
         if: ${{ !startsWith(github.event_name, 'pull_request') }}
       - name: Build with Maven
-        run: mvn -B -V -e clean verify
+        run: mvn -B -V -e clean install
       - name: Publish Test Report
         if: ${{ (success() || failure()) && matrix.java == '17' && github.event_name == 'pull_request' }}
         uses: scacap/action-surefire-report@v1
