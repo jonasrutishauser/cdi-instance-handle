@@ -2,6 +2,7 @@
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,69 +20,67 @@ class CDIExtendedInstance&lt;T&gt; implements ExtendedInstance&lt;T&gt; {
     private final Type targetType;
     private final Set&lt;Annotation&gt; qualifiers;
 
-<span class="fc" id="L22">    public CDIExtendedInstance(BeanManager beanManager, Instance&lt;T&gt; instance, Type targetType, Set&lt;Annotation&gt; qualifiers) {</span>
-<span class="fc" id="L23">        this.beanManager = beanManager;</span>
-<span class="fc" id="L24">        this.targetType = targetType;</span>
-<span class="fc" id="L25">        this.instance = instance;</span>
-<span class="fc" id="L26">        this.qualifiers = qualifiers;</span>
-<span class="fc" id="L27">    }</span>
+<span class="fc" id="L23">    public CDIExtendedInstance(BeanManager beanManager, Instance&lt;T&gt; instance, Type targetType, Set&lt;Annotation&gt; qualifiers) {</span>
+<span class="fc" id="L24">        this.beanManager = beanManager;</span>
+<span class="fc" id="L25">        this.targetType = targetType;</span>
+<span class="fc" id="L26">        this.instance = instance;</span>
+<span class="fc" id="L27">        this.qualifiers = qualifiers;</span>
+<span class="fc" id="L28">    }</span>
 
     public ExtendedInstance&lt;T&gt; select(Annotation... qualifiers) {
-<span class="fc" id="L30">        return new CDIExtendedInstance&lt;&gt;(beanManager, instance.select(qualifiers), targetType, addedQualifiers(qualifiers));</span>
+<span class="fc" id="L31">        return new CDIExtendedInstance&lt;&gt;(beanManager, instance.select(qualifiers), targetType, addedQualifiers(qualifiers));</span>
     }
 
     public &lt;U extends T&gt; ExtendedInstance&lt;U&gt; select(Class&lt;U&gt; subtype, Annotation... qualifiers) {
-<span class="fc" id="L34">        return new CDIExtendedInstance&lt;&gt;(beanManager, instance.select(subtype, qualifiers), subtype, addedQualifiers(qualifiers));</span>
+<span class="fc" id="L35">        return new CDIExtendedInstance&lt;&gt;(beanManager, instance.select(subtype, qualifiers), subtype, addedQualifiers(qualifiers));</span>
     }
 
     public &lt;U extends T&gt; ExtendedInstance&lt;U&gt; select(TypeLiteral&lt;U&gt; subtype, Annotation... qualifiers) {
-<span class="fc" id="L38">        return new CDIExtendedInstance&lt;&gt;(beanManager, instance.select(subtype, qualifiers), subtype.getType(), addedQualifiers(qualifiers));</span>
+<span class="fc" id="L39">        return new CDIExtendedInstance&lt;&gt;(beanManager, instance.select(subtype, qualifiers), subtype.getType(), addedQualifiers(qualifiers));</span>
     }
 
     @Override
     public Instance&lt;T&gt; getInstance() {
-<span class="fc" id="L43">        return instance;</span>
+<span class="fc" id="L44">        return instance;</span>
     }
 
     @Override
     public Handle&lt;T&gt; getPseudoScopeClosingHandle() {
-<span class="fc" id="L48">        return new HandleImpl();</span>
+<span class="fc" id="L49">        return new HandleImpl();</span>
     }
 
     private Set&lt;Annotation&gt; addedQualifiers(Annotation... qualifiers) {
-<span class="fc" id="L52">        Set&lt;Annotation&gt; newQualifiers = new HashSet&lt;&gt;(this.qualifiers);</span>
-<span class="fc bfc" id="L53" title="All 2 branches covered.">        for (Annotation qualifier : qualifiers) {</span>
-<span class="fc" id="L54">            newQualifiers.add(qualifier);</span>
-        }
-<span class="fc" id="L56">        return newQualifiers;</span>
+<span class="fc" id="L53">        Set&lt;Annotation&gt; newQualifiers = new HashSet&lt;&gt;(this.qualifiers);</span>
+<span class="fc" id="L54">        Collections.addAll(newQualifiers, qualifiers);</span>
+<span class="fc" id="L55">        return newQualifiers;</span>
     }
 
-<span class="fc" id="L59">    private class HandleImpl implements Handle&lt;T&gt; {</span>
+<span class="fc" id="L58">    private class HandleImpl implements Handle&lt;T&gt; {</span>
         private T bean;
 
         public T get() {
-<span class="pc bpc" id="L63" title="1 of 2 branches missed.">            if (bean == null) {</span>
-<span class="fc" id="L64">                bean = instance.get();</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">            if (bean == null) {</span>
+<span class="fc" id="L63">                bean = instance.get();</span>
             }
-<span class="fc" id="L66">            return bean;</span>
+<span class="fc" id="L65">            return bean;</span>
         }
 
         public Bean&lt;T&gt; getBean() {
-<span class="fc" id="L70">            return (Bean&lt;T&gt;) beanManager.resolve(beanManager.getBeans(targetType, qualifiers.toArray(new Annotation[0])));</span>
+<span class="fc" id="L69">            return (Bean&lt;T&gt;) beanManager.resolve(beanManager.getBeans(targetType, qualifiers.toArray(new Annotation[0])));</span>
         }
 
         public void destroy() {
-<span class="pc bpc" id="L74" title="1 of 2 branches missed.">            if (bean != null) {</span>
-<span class="fc" id="L75">                instance.destroy(bean);</span>
-<span class="fc" id="L76">                bean = null;</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">            if (bean != null) {</span>
+<span class="fc" id="L74">                instance.destroy(bean);</span>
+<span class="fc" id="L75">                bean = null;</span>
             }
-<span class="fc" id="L78">        }</span>
+<span class="fc" id="L77">        }</span>
 
         public void close() {
-<span class="fc bfc" id="L81" title="All 2 branches covered.">            if (!beanManager.isNormalScope(getBean().getScope())) {</span>
-<span class="fc" id="L82">                destroy();</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">            if (!beanManager.isNormalScope(getBean().getScope())) {</span>
+<span class="fc" id="L81">                destroy();</span>
             }
-<span class="fc" id="L84">        }</span>
+<span class="fc" id="L83">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

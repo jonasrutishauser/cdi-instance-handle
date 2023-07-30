@@ -13,7 +13,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 class ExtendedInstanceProducer {
 
     @Produces
-    static &lt;T&gt; ExtendedInstance&lt;T&gt; createExtendedInstance(BeanManager beanManager, InjectionPoint injectionPoint, Instance&lt;Object&gt; instance) {
+    static &lt;T&gt; ExtendedInstance&lt;T&gt; createExtendedInstance(InjectionPoint injectionPoint, Instance&lt;Object&gt; instance) {
 <span class="nc" id="L17">        throw new IllegalStateException(&quot;should not be called&quot;);</span>
     }
     
