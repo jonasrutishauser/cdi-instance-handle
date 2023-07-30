@@ -18,11 +18,11 @@ class ExtendedInstanceProducer {
     }
     
     static &lt;T&gt; ExtendedInstance&lt;T&gt; create(BeanManager beanManager, InjectionPoint injectionPoint, Instance&lt;T&gt; instance) {
-<span class="nc" id="L21">        Type targetType = Object.class;</span>
-<span class="nc bnc" id="L22" title="All 2 branches missed.">        if (injectionPoint.getType() instanceof ParameterizedType) {</span>
-<span class="nc" id="L23">            targetType = ((ParameterizedType) injectionPoint.getType()).getActualTypeArguments()[0];</span>
+<span class="fc" id="L21">        Type targetType = Object.class;</span>
+<span class="fc bfc" id="L22" title="All 2 branches covered.">        if (injectionPoint.getType() instanceof ParameterizedType) {</span>
+<span class="fc" id="L23">            targetType = ((ParameterizedType) injectionPoint.getType()).getActualTypeArguments()[0];</span>
         }
-<span class="nc" id="L25">        return new CDIExtendedInstance&lt;&gt;(beanManager, instance, targetType, injectionPoint.getQualifiers());</span>
+<span class="fc" id="L25">        return new CDIExtendedInstance&lt;&gt;(beanManager, instance, targetType, injectionPoint.getQualifiers());</span>
     }
 
     private ExtendedInstanceProducer() {
