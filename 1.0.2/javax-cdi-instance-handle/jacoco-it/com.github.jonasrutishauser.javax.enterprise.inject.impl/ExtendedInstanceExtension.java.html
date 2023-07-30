@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExtendedInstanceExtension.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">javax-cdi-instance-handle</a> &gt; <a href="index.source.html" class="el_package">com.github.jonasrutishauser.javax.enterprise.inject.impl</a> &gt; <span class="el_source">ExtendedInstanceExtension.java</span></div><h1>ExtendedInstanceExtension.java</h1><pre class="source lang-java linenums">package com.github.jonasrutishauser.javax.enterprise.inject.impl;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Member;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.enterprise.context.Dependent;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.Annotated;
+import javax.enterprise.inject.spi.AnnotatedConstructor;
+import javax.enterprise.inject.spi.AnnotatedField;
+import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanAttributes;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.InjectionPoint;
+import javax.enterprise.inject.spi.ProcessBeanAttributes;
+import javax.enterprise.inject.spi.ProcessInjectionPoint;
+import javax.enterprise.inject.spi.ProcessProducer;
+import javax.enterprise.inject.spi.Producer;
+import javax.enterprise.util.AnnotationLiteral;
+
+import com.github.jonasrutishauser.javax.enterprise.inject.ExtendedInstance;
+
+<span class="fc" id="L34">public class ExtendedInstanceExtension implements Extension {</span>
+<span class="fc" id="L35">    private final Set&lt;Annotation&gt; qualifiers = new HashSet&lt;&gt;();</span>
+
+    @SuppressWarnings(&quot;rawtypes&quot;)
+    private BeanAttributes&lt;ExtendedInstance&gt; producerAttributes;
+    @SuppressWarnings(&quot;rawtypes&quot;)
+    private Producer&lt;ExtendedInstance&gt; producer;
+
+    void addProducer(@Observes BeforeBeanDiscovery event, BeanManager beanManager) {
+<span class="fc" id="L43">        AnnotatedType&lt;ExtendedInstanceProducer&gt; annotatedType = beanManager</span>
+<span class="fc" id="L44">                .createAnnotatedType(ExtendedInstanceProducer.class);</span>
+<span class="fc" id="L45">        event.addAnnotatedType(new AnnotatedType&lt;ExtendedInstanceProducer&gt;() {</span>
+            @Override
+            public Type getBaseType() {
+<span class="fc" id="L48">                return annotatedType.getBaseType();</span>
+            }
+
+            @Override
+            public Set&lt;Type&gt; getTypeClosure() {
+<span class="fc" id="L53">                return annotatedType.getTypeClosure();</span>
+            }
+
+            @Override
+            public &lt;T extends Annotation&gt; T getAnnotation(Class&lt;T&gt; annotationType) {
+<span class="fc bfc" id="L58" title="All 2 branches covered.">                if (Dependent.class.equals(annotationType)) {</span>
+<span class="fc" id="L59">                    return (T) DependentLiteral.INSTANCE;</span>
+                }
+<span class="fc" id="L61">                return annotatedType.getAnnotation(annotationType);</span>
+            }
+
+            @Override
+            public Set&lt;Annotation&gt; getAnnotations() {
+<span class="fc" id="L66">                Set&lt;Annotation&gt; annotations = new HashSet&lt;&gt;(annotatedType.getAnnotations());</span>
+<span class="fc" id="L67">                annotations.add(getAnnotation(Dependent.class));</span>
+<span class="fc" id="L68">                return annotations;</span>
+            }
+
+            @Override
+            public boolean isAnnotationPresent(Class&lt;? extends Annotation&gt; annotationType) {
+<span class="pc bpc" id="L73" title="2 of 4 branches missed.">                return Dependent.class.equals(annotationType) || annotatedType.isAnnotationPresent(annotationType);</span>
+            }
+
+            @Override
+            public Class&lt;ExtendedInstanceProducer&gt; getJavaClass() {
+<span class="fc" id="L78">                return annotatedType.getJavaClass();</span>
+            }
+
+            @Override
+            public Set&lt;AnnotatedConstructor&lt;ExtendedInstanceProducer&gt;&gt; getConstructors() {
+<span class="fc" id="L83">                return annotatedType.getConstructors();</span>
+            }
+
+            @Override
+            public Set&lt;AnnotatedMethod&lt;? super ExtendedInstanceProducer&gt;&gt; getMethods() {
+<span class="fc" id="L88">                return annotatedType.getMethods();</span>
+            }
+
+            @Override
+            public Set&lt;AnnotatedField&lt;? super ExtendedInstanceProducer&gt;&gt; getFields() {
+<span class="fc" id="L93">                return annotatedType.getFields();</span>
+            }
+<span class="fc" id="L95">        }, ExtendedInstanceProducer.class.getName());</span>
+<span class="fc" id="L96">    }</span>
+
+    void addQualifiers(@Observes ProcessInjectionPoint&lt;?, ExtendedInstance&lt;?&gt;&gt; event) {
+<span class="fc" id="L99">        qualifiers.addAll(event.getInjectionPoint().getQualifiers());</span>
+<span class="fc" id="L100">    }</span>
+
+    @SuppressWarnings(&quot;rawtypes&quot;)
+    void addAllQualifiers(@Observes ProcessBeanAttributes&lt;ExtendedInstance&gt; event) {
+<span class="fc" id="L104">        Set&lt;Annotation&gt; currentQualifiers = new HashSet&lt;&gt;(qualifiers);</span>
+<span class="fc" id="L105">        qualifiers.clear();</span>
+<span class="fc" id="L106">        producerAttributes = event.getBeanAttributes();</span>
+<span class="fc" id="L107">        event.setBeanAttributes(new BeanAttributes&lt;ExtendedInstance&gt;() {</span>
+            @Override
+            public boolean isAlternative() {
+<span class="fc" id="L110">                return producerAttributes.isAlternative();</span>
+            }
+
+            @Override
+            public Set&lt;Type&gt; getTypes() {
+<span class="fc" id="L115">                return producerAttributes.getTypes();</span>
+            }
+
+            @Override
+            public Set&lt;Class&lt;? extends Annotation&gt;&gt; getStereotypes() {
+<span class="fc" id="L120">                return producerAttributes.getStereotypes();</span>
+            }
+
+            @Override
+            public Class&lt;? extends Annotation&gt; getScope() {
+<span class="fc" id="L125">                return producerAttributes.getScope();</span>
+            }
+
+            @Override
+            public Set&lt;Annotation&gt; getQualifiers() {
+<span class="fc" id="L130">                return currentQualifiers;</span>
+            }
+
+            @Override
+            public String getName() {
+<span class="fc" id="L135">                return producerAttributes.getName();</span>
+            }
+        });
+<span class="fc" id="L138">    }</span>
+
+    @SuppressWarnings(&quot;rawtypes&quot;)
+    void setExtendedInstanceProducer(@Observes ProcessProducer&lt;?, ExtendedInstance&gt; event, BeanManager beanManager) {
+<span class="fc" id="L142">        Producer&lt;ExtendedInstance&gt; extendedInstanceProducer = event.getProducer();</span>
+<span class="fc" id="L143">        producer = new Producer&lt;ExtendedInstance&gt;() {</span>
+            @Override
+            public ExtendedInstance&lt;?&gt; produce(CreationalContext&lt;ExtendedInstance&gt; ctx) {
+<span class="fc" id="L146">                InjectionPoint targetInjectionPoint = (InjectionPoint) beanManager</span>
+<span class="fc" id="L147">                        .getInjectableReference(extendedInstanceProducer.getInjectionPoints().stream()</span>
+<span class="fc" id="L148">                                .filter(ip -&gt; InjectionPoint.class.equals(ip.getType())).findAny()</span>
+<span class="fc" id="L149">                                .orElseThrow(IllegalStateException::new), ctx);</span>
+<span class="fc" id="L150">                InjectionPoint instanceInjectionPoint = extendedInstanceProducer.getInjectionPoints().stream()</span>
+<span class="fc" id="L151">                        .filter(ip -&gt; ip.getType() instanceof ParameterizedType).findAny()</span>
+<span class="fc" id="L152">                        .orElseThrow(IllegalStateException::new);</span>
+<span class="fc" id="L153">                Instance&lt;?&gt; instance = (Instance&lt;?&gt;) beanManager.getInjectableReference(new InjectionPoint() {</span>
+                    @Override
+                    public Type getType() {
+<span class="fc bfc" id="L156" title="All 2 branches covered.">                        if (targetInjectionPoint.getType() instanceof Class) {</span>
+<span class="fc" id="L157">                            return new InstanceType(Object.class);</span>
+                        }
+<span class="fc" id="L159">                        return new InstanceType(</span>
+<span class="fc" id="L160">                                ((ParameterizedType) targetInjectionPoint.getType()).getActualTypeArguments()[0]);</span>
+                    }
+
+                    @Override
+                    public Set&lt;Annotation&gt; getQualifiers() {
+<span class="fc" id="L165">                        return targetInjectionPoint.getQualifiers();</span>
+                    }
+
+                    @Override
+                    public Bean&lt;?&gt; getBean() {
+<span class="fc" id="L170">                        return instanceInjectionPoint.getBean();</span>
+                    }
+
+                    @Override
+                    public Member getMember() {
+<span class="nc" id="L175">                        return instanceInjectionPoint.getMember();</span>
+                    }
+
+                    @Override
+                    public Annotated getAnnotated() {
+<span class="nc" id="L180">                        return instanceInjectionPoint.getAnnotated();</span>
+                    }
+
+                    @Override
+                    public boolean isDelegate() {
+<span class="fc" id="L185">                        return false;</span>
+                    }
+
+                    @Override
+                    public boolean isTransient() {
+<span class="nc" id="L190">                        return false;</span>
+                    }
+                }, ctx);
+<span class="fc" id="L193">                return ExtendedInstanceProducer.create(beanManager, targetInjectionPoint, instance);</span>
+            }
+
+            @Override
+            public Set&lt;InjectionPoint&gt; getInjectionPoints() {
+<span class="fc" id="L198">                return extendedInstanceProducer.getInjectionPoints();</span>
+            }
+
+            @Override
+            public void dispose(ExtendedInstance instance) {
+<span class="fc" id="L203">                extendedInstanceProducer.dispose(instance);</span>
+<span class="fc" id="L204">            }</span>
+        };
+<span class="fc" id="L206">        event.setProducer(producer);</span>
+<span class="fc" id="L207">    }</span>
+
+    @SuppressWarnings(&quot;rawtypes&quot;)
+    void addAdditionalProducer(@Observes AfterBeanDiscovery event) {
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">        if (!qualifiers.isEmpty()) {</span>
+            // Add additional producer for missed qualifiers with OpenWebBeans
+<span class="nc" id="L213">            event.addBean(new Bean&lt;ExtendedInstance&gt;() {</span>
+                @Override
+                public ExtendedInstance create(CreationalContext&lt;ExtendedInstance&gt; creationalContext) {
+<span class="nc" id="L216">                    return producer.produce(creationalContext);</span>
+                }
+    
+                @Override
+                public void destroy(ExtendedInstance instance, CreationalContext&lt;ExtendedInstance&gt; creationalContext) {
+<span class="nc" id="L221">                    producer.dispose(instance);</span>
+<span class="nc" id="L222">                }</span>
+    
+                @Override
+                public Set&lt;Type&gt; getTypes() {
+<span class="nc" id="L226">                    return producerAttributes.getTypes();</span>
+                }
+    
+                @Override
+                public Set&lt;Annotation&gt; getQualifiers() {
+<span class="nc" id="L231">                    return qualifiers;</span>
+                }
+    
+                @Override
+                public Class&lt;? extends Annotation&gt; getScope() {
+<span class="nc" id="L236">                    return producerAttributes.getScope();</span>
+                }
+    
+                @Override
+                public String getName() {
+<span class="nc" id="L241">                    return producerAttributes.getName();</span>
+                }
+    
+                @Override
+                public Set&lt;Class&lt;? extends Annotation&gt;&gt; getStereotypes() {
+<span class="nc" id="L246">                    return producerAttributes.getStereotypes();</span>
+                }
+    
+                @Override
+                public boolean isAlternative() {
+<span class="nc" id="L251">                    return false;</span>
+                }
+    
+                @Override
+                public Class&lt;?&gt; getBeanClass() {
+<span class="nc" id="L256">                    return ExtendedInstanceProducer.class;</span>
+                }
+    
+                @Override
+                public Set&lt;InjectionPoint&gt; getInjectionPoints() {
+<span class="nc" id="L261">                    return producer.getInjectionPoints();</span>
+                }
+    
+                @Override
+                public boolean isNullable() {
+<span class="nc" id="L266">                    return false;</span>
+                }});
+        }
+<span class="fc" id="L269">    }  </span>
+
+    private static class DependentLiteral extends AnnotationLiteral&lt;Dependent&gt; implements Dependent {
+<span class="fc" id="L272">        private static final Dependent INSTANCE = new DependentLiteral();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
