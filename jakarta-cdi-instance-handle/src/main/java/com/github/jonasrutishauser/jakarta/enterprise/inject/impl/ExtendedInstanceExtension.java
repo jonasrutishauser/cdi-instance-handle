@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.github.jonasrutishauser.jakarta.enterprise.inject.ExtendedInstance;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.spi.Annotated;
@@ -26,7 +27,8 @@ public class ExtendedInstanceExtension implements Extension {
     private Set<Annotation> qualifiers = new HashSet<>();
 
     void addProducer(@Observes BeforeBeanDiscovery event) {
-        event.addAnnotatedType(ExtendedInstanceProducer.class, ExtendedInstanceProducer.class.getName());
+        event.addAnnotatedType(ExtendedInstanceProducer.class, ExtendedInstanceProducer.class.getName())
+                .add(Dependent.Literal.INSTANCE);
     }
 
     void addQualifiers(@Observes ProcessInjectionPoint<?, ExtendedInstance<?>> event) {
@@ -37,8 +39,10 @@ public class ExtendedInstanceExtension implements Extension {
         event.configureBeanAttributes().qualifiers(qualifiers);
     }
 
-    void setExtendedInstanceProducer(@Observes ProcessProducer<?, ExtendedInstance<?>> event, BeanManager beanManager) {
-        Producer<ExtendedInstance<?>> extendedInstanceProducer = event.getProducer();
+    void setExtendedInstanceProducer(@SuppressWarnings("rawtypes") @Observes ProcessProducer<?, ExtendedInstance> event,
+            BeanManager beanManager) {
+        @SuppressWarnings("rawtypes")
+        Producer<ExtendedInstance> extendedInstanceProducer = event.getProducer();
         event.configureProducer().produceWith(creationalContext -> {
             InjectionPoint targetInjectionPoint = (InjectionPoint) beanManager
                     .getInjectableReference(extendedInstanceProducer.getInjectionPoints().stream()

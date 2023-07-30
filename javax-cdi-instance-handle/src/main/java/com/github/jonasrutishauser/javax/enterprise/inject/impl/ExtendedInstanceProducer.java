@@ -3,12 +3,12 @@ package com.github.jonasrutishauser.javax.enterprise.inject.impl;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import com.github.jonasrutishauser.javax.enterprise.inject.ExtendedInstance;
-
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
+
+import com.github.jonasrutishauser.javax.enterprise.inject.ExtendedInstance;
 
 class ExtendedInstanceProducer {
 
