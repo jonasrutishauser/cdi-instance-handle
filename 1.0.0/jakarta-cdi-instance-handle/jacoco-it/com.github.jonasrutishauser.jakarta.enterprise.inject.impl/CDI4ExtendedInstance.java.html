@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CDI4ExtendedInstance.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jakarta-cdi-instance-handle</a> &gt; <a href="index.source.html" class="el_package">com.github.jonasrutishauser.jakarta.enterprise.inject.impl</a> &gt; <span class="el_source">CDI4ExtendedInstance.java</span></div><h1>CDI4ExtendedInstance.java</h1><pre class="source lang-java linenums">package com.github.jonasrutishauser.jakarta.enterprise.inject.impl;
+
+import java.lang.annotation.Annotation;
+
+import com.github.jonasrutishauser.jakarta.enterprise.inject.ExtendedInstance;
+
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.util.TypeLiteral;
+
+class CDI4ExtendedInstance&lt;T&gt; implements ExtendedInstance&lt;T&gt; {
+    
+    private final BeanManager beanManager;
+    private final Instance&lt;T&gt; instance;
+
+<span class="fc" id="L17">    public CDI4ExtendedInstance(BeanManager beanManager, Instance&lt;T&gt; instance) {</span>
+<span class="fc" id="L18">        this.beanManager = beanManager;</span>
+<span class="fc" id="L19">        this.instance = instance;</span>
+<span class="fc" id="L20">    }</span>
+
+    public ExtendedInstance&lt;T&gt; select(Annotation... qualifiers) {
+<span class="fc" id="L23">        return new CDI4ExtendedInstance&lt;&gt;(beanManager, instance.select(qualifiers));</span>
+    }
+
+    public &lt;U extends T&gt; ExtendedInstance&lt;U&gt; select(Class&lt;U&gt; subtype, Annotation... qualifiers) {
+<span class="fc" id="L27">        return new CDI4ExtendedInstance&lt;&gt;(beanManager, instance.select(subtype, qualifiers));</span>
+    }
+
+    public &lt;U extends T&gt; ExtendedInstance&lt;U&gt; select(TypeLiteral&lt;U&gt; subtype, Annotation... qualifiers) {
+<span class="fc" id="L31">        return new CDI4ExtendedInstance&lt;&gt;(beanManager, instance.select(subtype, qualifiers));</span>
+    }
+
+    @Override
+    public Instance&lt;T&gt; getInstance() {
+<span class="fc" id="L36">        return instance;</span>
+    }
+
+    @Override
+    public Handle&lt;T&gt; getPseudoScopeClosingHandle() {
+<span class="fc" id="L41">        return new HandleImpl&lt;&gt;(beanManager, instance.getHandle());</span>
+    }
+
+    private static class HandleImpl&lt;T&gt; implements Handle&lt;T&gt; {
+        private final BeanManager beanManager;
+        private final jakarta.enterprise.inject.Instance.Handle&lt;T&gt; delegate;
+
+<span class="fc" id="L48">        public HandleImpl(BeanManager beanManager, jakarta.enterprise.inject.Instance.Handle&lt;T&gt; delegate) {</span>
+<span class="fc" id="L49">            this.beanManager = beanManager;</span>
+<span class="fc" id="L50">            this.delegate = delegate;</span>
+<span class="fc" id="L51">        }</span>
+
+        public T get() {
+<span class="fc" id="L54">            return delegate.get();</span>
+        }
+
+        public Bean&lt;T&gt; getBean() {
+<span class="nc" id="L58">            return delegate.getBean();</span>
+        }
+
+        public void destroy() {
+<span class="nc" id="L62">            delegate.destroy();</span>
+<span class="nc" id="L63">        }</span>
+
+        public void close() {
+<span class="fc bfc" id="L66" title="All 2 branches covered.">            if (!beanManager.isNormalScope(delegate.getBean().getScope())) {</span>
+<span class="fc" id="L67">                delegate.destroy();</span>
+            }
+<span class="fc" id="L69">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

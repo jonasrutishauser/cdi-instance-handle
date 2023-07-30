@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CDI3ExtendedInstance.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jakarta-cdi-instance-handle</a> &gt; <a href="index.source.html" class="el_package">com.github.jonasrutishauser.jakarta.enterprise.inject.impl</a> &gt; <span class="el_source">CDI3ExtendedInstance.java</span></div><h1>CDI3ExtendedInstance.java</h1><pre class="source lang-java linenums">package com.github.jonasrutishauser.jakarta.enterprise.inject.impl;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.github.jonasrutishauser.jakarta.enterprise.inject.ExtendedInstance;
+
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.util.TypeLiteral;
+
+class CDI3ExtendedInstance&lt;T&gt; implements ExtendedInstance&lt;T&gt; {
+    
+    private final BeanManager beanManager;
+    private final Instance&lt;T&gt; instance;
+    private final Type targetType;
+    private final Set&lt;Annotation&gt; qualifiers;
+
+<span class="fc" id="L23">    public CDI3ExtendedInstance(BeanManager beanManager, Instance&lt;T&gt; instance, Type targetType, Set&lt;Annotation&gt; qualifiers) {</span>
+<span class="fc" id="L24">        this.beanManager = beanManager;</span>
+<span class="fc" id="L25">        this.targetType = targetType;</span>
+<span class="fc" id="L26">        this.instance = instance;</span>
+<span class="fc" id="L27">        this.qualifiers = qualifiers;</span>
+<span class="fc" id="L28">    }</span>
+
+    public ExtendedInstance&lt;T&gt; select(Annotation... qualifiers) {
+<span class="fc" id="L31">        return new CDI3ExtendedInstance&lt;&gt;(beanManager, instance.select(qualifiers), targetType, addedQualifiers(qualifiers));</span>
+    }
+
+    public &lt;U extends T&gt; ExtendedInstance&lt;U&gt; select(Class&lt;U&gt; subtype, Annotation... qualifiers) {
+<span class="fc" id="L35">        return new CDI3ExtendedInstance&lt;&gt;(beanManager, instance.select(subtype, qualifiers), subtype, addedQualifiers(qualifiers));</span>
+    }
+
+    public &lt;U extends T&gt; ExtendedInstance&lt;U&gt; select(TypeLiteral&lt;U&gt; subtype, Annotation... qualifiers) {
+<span class="fc" id="L39">        return new CDI3ExtendedInstance&lt;&gt;(beanManager, instance.select(subtype, qualifiers), subtype.getType(), addedQualifiers(qualifiers));</span>
+    }
+
+    @Override
+    public Instance&lt;T&gt; getInstance() {
+<span class="fc" id="L44">        return instance;</span>
+    }
+
+    @Override
+    public Handle&lt;T&gt; getPseudoScopeClosingHandle() {
+<span class="fc" id="L49">        return new HandleImpl();</span>
+    }
+
+    private Set&lt;Annotation&gt; addedQualifiers(Annotation... qualifiers) {
+<span class="fc" id="L53">        Set&lt;Annotation&gt; newQualifiers = new HashSet&lt;&gt;(this.qualifiers);</span>
+<span class="fc" id="L54">        Collections.addAll(newQualifiers, qualifiers);</span>
+<span class="fc" id="L55">        return newQualifiers;</span>
+    }
+
+<span class="fc" id="L58">    private class HandleImpl implements Handle&lt;T&gt; {</span>
+        private T bean;
+
+        public T get() {
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">            if (bean == null) {</span>
+<span class="fc" id="L63">                bean = instance.get();</span>
+            }
+<span class="fc" id="L65">            return bean;</span>
+        }
+
+        public Bean&lt;T&gt; getBean() {
+<span class="fc" id="L69">            return (Bean&lt;T&gt;) beanManager.resolve(beanManager.getBeans(targetType, qualifiers.toArray(Annotation[]::new)));</span>
+        }
+
+        public void destroy() {
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">            if (bean != null) {</span>
+<span class="fc" id="L74">                instance.destroy(bean);</span>
+<span class="fc" id="L75">                bean = null;</span>
+            }
+<span class="fc" id="L77">        }</span>
+
+        public void close() {
+<span class="fc bfc" id="L80" title="All 2 branches covered.">            if (!beanManager.isNormalScope(getBean().getScope())) {</span>
+<span class="fc" id="L81">                destroy();</span>
+            }
+<span class="fc" id="L83">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

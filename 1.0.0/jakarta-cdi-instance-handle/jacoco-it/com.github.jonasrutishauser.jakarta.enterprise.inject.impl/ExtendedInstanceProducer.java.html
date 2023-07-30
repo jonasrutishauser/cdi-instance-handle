@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExtendedInstanceProducer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jakarta-cdi-instance-handle</a> &gt; <a href="index.source.html" class="el_package">com.github.jonasrutishauser.jakarta.enterprise.inject.impl</a> &gt; <span class="el_source">ExtendedInstanceProducer.java</span></div><h1>ExtendedInstanceProducer.java</h1><pre class="source lang-java linenums">package com.github.jonasrutishauser.jakarta.enterprise.inject.impl;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
+import com.github.jonasrutishauser.jakarta.enterprise.inject.ExtendedInstance;
+
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+
+class ExtendedInstanceProducer {
+
+<span class="fc" id="L15">    private static final boolean CDI_4 = isCdiVersionAtLeast4();</span>
+
+    private static boolean isCdiVersionAtLeast4() {
+        try {
+<span class="fc" id="L19">            Instance.class.getMethod(&quot;getHandle&quot;);</span>
+<span class="fc" id="L20">            return true;</span>
+<span class="fc" id="L21">        } catch (NoSuchMethodException e) {</span>
+<span class="fc" id="L22">            return false;</span>
+        }
+    }
+
+    @Produces
+    static &lt;T&gt; ExtendedInstance&lt;T&gt; createExtendedInstance(InjectionPoint injectionPoint, Instance&lt;Object&gt; instance) {
+<span class="nc" id="L28">        throw new IllegalStateException(&quot;should not be called&quot;);</span>
+    }
+    
+    static &lt;T&gt; ExtendedInstance&lt;T&gt; create(BeanManager beanManager, InjectionPoint injectionPoint, Instance&lt;T&gt; instance) {
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        if (CDI_4) {</span>
+<span class="fc" id="L33">            return new CDI4ExtendedInstance&lt;&gt;(beanManager, instance);</span>
+        } else {
+<span class="fc" id="L35">            Type targetType = Object.class;</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">            if (injectionPoint.getType() instanceof ParameterizedType) {</span>
+<span class="fc" id="L37">                targetType = ((ParameterizedType) injectionPoint.getType()).getActualTypeArguments()[0];</span>
+            }
+<span class="fc" id="L39">            return new CDI3ExtendedInstance&lt;&gt;(beanManager, instance, targetType, injectionPoint.getQualifiers());</span>
+        }
+    }
+
+    private ExtendedInstanceProducer() {
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
