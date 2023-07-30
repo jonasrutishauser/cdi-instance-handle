@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.github.jonasrutishauser.jakarta.enterprise.inject.ExtendedInstance;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.spi.Annotated;
@@ -22,73 +23,76 @@ import jakarta.enterprise.inject.spi.ProcessInjectionPoint;
 import jakarta.enterprise.inject.spi.ProcessProducer;
 import jakarta.enterprise.inject.spi.Producer;
 
-<span class="fc" id="L25">public class ExtendedInstanceExtension implements Extension {</span>
-<span class="fc" id="L26">    private Set&lt;Annotation&gt; qualifiers = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L26">public class ExtendedInstanceExtension implements Extension {</span>
+<span class="fc" id="L27">    private Set&lt;Annotation&gt; qualifiers = new HashSet&lt;&gt;();</span>
 
     void addProducer(@Observes BeforeBeanDiscovery event) {
-<span class="fc" id="L29">        event.addAnnotatedType(ExtendedInstanceProducer.class, ExtendedInstanceProducer.class.getName());</span>
-<span class="fc" id="L30">    }</span>
+<span class="fc" id="L30">        event.addAnnotatedType(ExtendedInstanceProducer.class, ExtendedInstanceProducer.class.getName())</span>
+<span class="fc" id="L31">                .add(Dependent.Literal.INSTANCE);</span>
+<span class="fc" id="L32">    }</span>
 
     void addQualifiers(@Observes ProcessInjectionPoint&lt;?, ExtendedInstance&lt;?&gt;&gt; event) {
-<span class="fc" id="L33">        qualifiers.addAll(event.getInjectionPoint().getQualifiers());</span>
-<span class="fc" id="L34">    }</span>
+<span class="fc" id="L35">        qualifiers.addAll(event.getInjectionPoint().getQualifiers());</span>
+<span class="fc" id="L36">    }</span>
 
     void addAllQualifiers(@SuppressWarnings(&quot;rawtypes&quot;) @Observes ProcessBeanAttributes&lt;ExtendedInstance&gt; event) {
-<span class="fc" id="L37">        event.configureBeanAttributes().qualifiers(qualifiers);</span>
-<span class="fc" id="L38">    }</span>
+<span class="fc" id="L39">        event.configureBeanAttributes().qualifiers(qualifiers);</span>
+<span class="fc" id="L40">    }</span>
 
-    void setExtendedInstanceProducer(@Observes ProcessProducer&lt;?, ExtendedInstance&lt;?&gt;&gt; event, BeanManager beanManager) {
-<span class="fc" id="L41">        Producer&lt;ExtendedInstance&lt;?&gt;&gt; extendedInstanceProducer = event.getProducer();</span>
-<span class="fc" id="L42">        event.configureProducer().produceWith(creationalContext -&gt; {</span>
-<span class="fc" id="L43">            InjectionPoint targetInjectionPoint = (InjectionPoint) beanManager</span>
-<span class="fc" id="L44">                    .getInjectableReference(extendedInstanceProducer.getInjectionPoints().stream()</span>
-<span class="fc" id="L45">                            .filter(ip -&gt; InjectionPoint.class.equals(ip.getType())).findAny()</span>
-<span class="fc" id="L46">                            .orElseThrow(IllegalStateException::new), creationalContext);</span>
-<span class="fc" id="L47">            InjectionPoint instanceInjectionPoint = extendedInstanceProducer.getInjectionPoints().stream()</span>
-<span class="fc" id="L48">                    .filter(ip -&gt; ip.getType() instanceof ParameterizedType).findAny()</span>
-<span class="fc" id="L49">                    .orElseThrow(IllegalStateException::new);</span>
-<span class="fc" id="L50">            Instance&lt;?&gt; instance = (Instance&lt;?&gt;) beanManager.getInjectableReference(new InjectionPoint() {</span>
+    void setExtendedInstanceProducer(@SuppressWarnings(&quot;rawtypes&quot;) @Observes ProcessProducer&lt;?, ExtendedInstance&gt; event,
+            BeanManager beanManager) {
+        @SuppressWarnings(&quot;rawtypes&quot;)
+<span class="fc" id="L45">        Producer&lt;ExtendedInstance&gt; extendedInstanceProducer = event.getProducer();</span>
+<span class="fc" id="L46">        event.configureProducer().produceWith(creationalContext -&gt; {</span>
+<span class="fc" id="L47">            InjectionPoint targetInjectionPoint = (InjectionPoint) beanManager</span>
+<span class="fc" id="L48">                    .getInjectableReference(extendedInstanceProducer.getInjectionPoints().stream()</span>
+<span class="fc" id="L49">                            .filter(ip -&gt; InjectionPoint.class.equals(ip.getType())).findAny()</span>
+<span class="fc" id="L50">                            .orElseThrow(IllegalStateException::new), creationalContext);</span>
+<span class="fc" id="L51">            InjectionPoint instanceInjectionPoint = extendedInstanceProducer.getInjectionPoints().stream()</span>
+<span class="fc" id="L52">                    .filter(ip -&gt; ip.getType() instanceof ParameterizedType).findAny()</span>
+<span class="fc" id="L53">                    .orElseThrow(IllegalStateException::new);</span>
+<span class="fc" id="L54">            Instance&lt;?&gt; instance = (Instance&lt;?&gt;) beanManager.getInjectableReference(new InjectionPoint() {</span>
                 @Override
                 public Type getType() {
-<span class="fc bfc" id="L53" title="All 2 branches covered.">                    if (targetInjectionPoint.getType() instanceof Class) {</span>
-<span class="fc" id="L54">                        return new InstanceType(Object.class);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">                    if (targetInjectionPoint.getType() instanceof Class) {</span>
+<span class="fc" id="L58">                        return new InstanceType(Object.class);</span>
                     }
-<span class="fc" id="L56">                    return new InstanceType(</span>
-<span class="fc" id="L57">                            ((ParameterizedType) targetInjectionPoint.getType()).getActualTypeArguments()[0]);</span>
+<span class="fc" id="L60">                    return new InstanceType(</span>
+<span class="fc" id="L61">                            ((ParameterizedType) targetInjectionPoint.getType()).getActualTypeArguments()[0]);</span>
                 }
 
                 @Override
                 public Set&lt;Annotation&gt; getQualifiers() {
-<span class="fc" id="L62">                    return targetInjectionPoint.getQualifiers();</span>
+<span class="fc" id="L66">                    return targetInjectionPoint.getQualifiers();</span>
                 }
 
                 @Override
                 public Bean&lt;?&gt; getBean() {
-<span class="fc" id="L67">                    return instanceInjectionPoint.getBean();</span>
+<span class="fc" id="L71">                    return instanceInjectionPoint.getBean();</span>
                 }
 
                 @Override
                 public Member getMember() {
-<span class="nc" id="L72">                    return instanceInjectionPoint.getMember();</span>
+<span class="nc" id="L76">                    return instanceInjectionPoint.getMember();</span>
                 }
 
                 @Override
                 public Annotated getAnnotated() {
-<span class="nc" id="L77">                    return instanceInjectionPoint.getAnnotated();</span>
+<span class="nc" id="L81">                    return instanceInjectionPoint.getAnnotated();</span>
                 }
 
                 @Override
                 public boolean isDelegate() {
-<span class="fc" id="L82">                    return false;</span>
+<span class="fc" id="L86">                    return false;</span>
                 }
 
                 @Override
                 public boolean isTransient() {
-<span class="nc" id="L87">                    return false;</span>
+<span class="nc" id="L91">                    return false;</span>
                 }
             }, creationalContext);
-<span class="fc" id="L90">            return ExtendedInstanceProducer.create(beanManager, targetInjectionPoint, instance);</span>
+<span class="fc" id="L94">            return ExtendedInstanceProducer.create(beanManager, targetInjectionPoint, instance);</span>
         });
-<span class="fc" id="L92">    }</span>
+<span class="fc" id="L96">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
