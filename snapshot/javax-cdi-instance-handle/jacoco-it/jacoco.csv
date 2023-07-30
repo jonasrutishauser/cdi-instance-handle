@@ -1,0 +1,9 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,InstanceType,58,0,10,0,14,0,11,0,6,0
+javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,ExtendedInstanceExtension.2.new InjectionPoint() {...},53,0,2,0,11,0,9,0,8,0
+javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,ExtendedInstanceExtension,47,0,0,0,13,0,5,0,5,0
+javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,ExtendedInstanceProducer,27,0,2,0,5,0,3,0,2,0
+javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,ExtendedInstanceExtension.new BeanAttributes() {...},33,0,0,0,7,0,7,0,7,0
+javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,ExtendedInstanceExtension.new Producer() {...},73,0,0,0,11,0,6,0,6,0
+javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,CDIExtendedInstance.HandleImpl,61,0,6,0,12,0,8,0,5,0
+javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,CDIExtendedInstance,98,0,2,0,15,0,8,0,7,0

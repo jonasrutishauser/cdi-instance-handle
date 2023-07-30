@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExtendedInstanceExtension.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">javax-cdi-instance-handle</a> &gt; <a href="index.source.html" class="el_package">com.github.jonasrutishauser.javax.enterprise.inject.impl</a> &gt; <span class="el_source">ExtendedInstanceExtension.java</span></div><h1>ExtendedInstanceExtension.java</h1><pre class="source lang-java linenums">package com.github.jonasrutishauser.javax.enterprise.inject.impl;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Member;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.github.jonasrutishauser.javax.enterprise.inject.ExtendedInstance;
+
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.Annotated;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanAttributes;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.InjectionPoint;
+import javax.enterprise.inject.spi.ProcessBeanAttributes;
+import javax.enterprise.inject.spi.ProcessInjectionPoint;
+import javax.enterprise.inject.spi.ProcessProducer;
+import javax.enterprise.inject.spi.Producer;
+
+<span class="nc" id="L27">public class ExtendedInstanceExtension implements Extension {</span>
+<span class="nc" id="L28">    private Set&lt;Annotation&gt; qualifiers = new HashSet&lt;&gt;();</span>
+
+    void addProducer(@Observes BeforeBeanDiscovery event, BeanManager beanManager) {
+<span class="nc" id="L31">        event.addAnnotatedType(beanManager.createAnnotatedType(ExtendedInstanceProducer.class),</span>
+<span class="nc" id="L32">                ExtendedInstanceProducer.class.getName());</span>
+<span class="nc" id="L33">    }</span>
+
+    void addQualifiers(@Observes ProcessInjectionPoint&lt;?, ExtendedInstance&lt;?&gt;&gt; event) {
+<span class="nc" id="L36">        qualifiers.addAll(event.getInjectionPoint().getQualifiers());</span>
+<span class="nc" id="L37">    }</span>
+
+    @SuppressWarnings(&quot;rawtypes&quot;)
+    void addAllQualifiers(@Observes ProcessBeanAttributes&lt;ExtendedInstance&gt; event) {
+<span class="nc" id="L41">        BeanAttributes&lt;ExtendedInstance&gt; beanAttributes = event.getBeanAttributes();</span>
+<span class="nc" id="L42">        event.setBeanAttributes(new BeanAttributes&lt;ExtendedInstance&gt;() {</span>
+            @Override
+            public boolean isAlternative() {
+<span class="nc" id="L45">                return beanAttributes.isAlternative();</span>
+            }
+
+            @Override
+            public Set&lt;Type&gt; getTypes() {
+<span class="nc" id="L50">                return beanAttributes.getTypes();</span>
+            }
+
+            @Override
+            public Set&lt;Class&lt;? extends Annotation&gt;&gt; getStereotypes() {
+<span class="nc" id="L55">                return beanAttributes.getStereotypes();</span>
+            }
+
+            @Override
+            public Class&lt;? extends Annotation&gt; getScope() {
+<span class="nc" id="L60">                return beanAttributes.getScope();</span>
+            }
+
+            @Override
+            public Set&lt;Annotation&gt; getQualifiers() {
+<span class="nc" id="L65">                return qualifiers;</span>
+            }
+
+            @Override
+            public String getName() {
+<span class="nc" id="L70">                return beanAttributes.getName();</span>
+            }
+        });
+<span class="nc" id="L73">    }</span>
+
+    void setExtendedInstanceProducer(@Observes ProcessProducer&lt;?, ExtendedInstance&lt;?&gt;&gt; event, BeanManager beanManager) {
+<span class="nc" id="L76">        Producer&lt;ExtendedInstance&lt;?&gt;&gt; extendedInstanceProducer = event.getProducer();</span>
+<span class="nc" id="L77">        event.setProducer(new Producer&lt;ExtendedInstance&lt;?&gt;&gt;() {</span>
+            @Override
+            public ExtendedInstance&lt;?&gt; produce(CreationalContext&lt;ExtendedInstance&lt;?&gt;&gt; ctx) {
+<span class="nc" id="L80">                InjectionPoint targetInjectionPoint = (InjectionPoint) beanManager</span>
+<span class="nc" id="L81">                        .getInjectableReference(extendedInstanceProducer.getInjectionPoints().stream()</span>
+<span class="nc" id="L82">                                .filter(ip -&gt; InjectionPoint.class.equals(ip.getType())).findAny().get(), ctx);</span>
+<span class="nc" id="L83">                InjectionPoint instanceInjectionPoint = extendedInstanceProducer.getInjectionPoints().stream()</span>
+<span class="nc" id="L84">                        .filter(ip -&gt; ip.getType() instanceof ParameterizedType).findAny().get();</span>
+<span class="nc" id="L85">                Instance&lt;?&gt; instance = (Instance&lt;?&gt;) beanManager.getInjectableReference(new InjectionPoint() {</span>
+                    @Override
+                    public Type getType() {
+<span class="nc bnc" id="L88" title="All 2 branches missed.">                        if (targetInjectionPoint.getType() instanceof Class) {</span>
+<span class="nc" id="L89">                            return new InstanceType(Object.class);</span>
+                        }
+<span class="nc" id="L91">                        return new InstanceType(</span>
+<span class="nc" id="L92">                                ((ParameterizedType) targetInjectionPoint.getType()).getActualTypeArguments()[0]);</span>
+                    }
+
+                    @Override
+                    public Set&lt;Annotation&gt; getQualifiers() {
+<span class="nc" id="L97">                        return targetInjectionPoint.getQualifiers();</span>
+                    }
+
+                    @Override
+                    public Bean&lt;?&gt; getBean() {
+<span class="nc" id="L102">                        return instanceInjectionPoint.getBean();</span>
+                    }
+
+                    @Override
+                    public Member getMember() {
+<span class="nc" id="L107">                        return instanceInjectionPoint.getMember();</span>
+                    }
+
+                    @Override
+                    public Annotated getAnnotated() {
+<span class="nc" id="L112">                        return instanceInjectionPoint.getAnnotated();</span>
+                    }
+
+                    @Override
+                    public boolean isDelegate() {
+<span class="nc" id="L117">                        return false;</span>
+                    }
+
+                    @Override
+                    public boolean isTransient() {
+<span class="nc" id="L122">                        return false;</span>
+                    }
+                }, ctx);
+<span class="nc" id="L125">                return ExtendedInstanceProducer.create(beanManager, targetInjectionPoint, instance);</span>
+            }
+
+            @Override
+            public Set&lt;InjectionPoint&gt; getInjectionPoints() {
+<span class="nc" id="L130">                return extendedInstanceProducer.getInjectionPoints();</span>
+            }
+
+            @Override
+            public void dispose(ExtendedInstance&lt;?&gt; instance) {
+<span class="nc" id="L135">                extendedInstanceProducer.dispose(instance);</span>
+<span class="nc" id="L136">            }</span>
+        });
+<span class="nc" id="L138">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
