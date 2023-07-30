@@ -40,54 +40,55 @@ import jakarta.enterprise.inject.spi.Producer;
     void setExtendedInstanceProducer(@Observes ProcessProducer&lt;?, ExtendedInstance&lt;?&gt;&gt; event, BeanManager beanManager) {
 <span class="fc" id="L41">        Producer&lt;ExtendedInstance&lt;?&gt;&gt; extendedInstanceProducer = event.getProducer();</span>
 <span class="fc" id="L42">        event.configureProducer().produceWith(creationalContext -&gt; {</span>
-<span class="fc" id="L43">            InjectionPoint targetInjectionPoint = (InjectionPoint) beanManager.getInjectableReference(</span>
-<span class="fc" id="L44">                    extendedInstanceProducer.getInjectionPoints().stream()</span>
-<span class="fc" id="L45">                            .filter(ip -&gt; InjectionPoint.class.equals(ip.getType())).findAny().get(),</span>
-                    creationalContext);
+<span class="fc" id="L43">            InjectionPoint targetInjectionPoint = (InjectionPoint) beanManager</span>
+<span class="fc" id="L44">                    .getInjectableReference(extendedInstanceProducer.getInjectionPoints().stream()</span>
+<span class="fc" id="L45">                            .filter(ip -&gt; InjectionPoint.class.equals(ip.getType())).findAny()</span>
+<span class="fc" id="L46">                            .orElseThrow(IllegalStateException::new), creationalContext);</span>
 <span class="fc" id="L47">            InjectionPoint instanceInjectionPoint = extendedInstanceProducer.getInjectionPoints().stream()</span>
-<span class="fc" id="L48">                    .filter(ip -&gt; ip.getType() instanceof ParameterizedType).findAny().get();</span>
-<span class="fc" id="L49">            Instance&lt;?&gt; instance = (Instance&lt;?&gt;) beanManager.getInjectableReference(new InjectionPoint() {</span>
+<span class="fc" id="L48">                    .filter(ip -&gt; ip.getType() instanceof ParameterizedType).findAny()</span>
+<span class="fc" id="L49">                    .orElseThrow(IllegalStateException::new);</span>
+<span class="fc" id="L50">            Instance&lt;?&gt; instance = (Instance&lt;?&gt;) beanManager.getInjectableReference(new InjectionPoint() {</span>
                 @Override
                 public Type getType() {
-<span class="fc bfc" id="L52" title="All 2 branches covered.">                    if (targetInjectionPoint.getType() instanceof Class) {</span>
-<span class="fc" id="L53">                        return new InstanceType(Object.class);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">                    if (targetInjectionPoint.getType() instanceof Class) {</span>
+<span class="fc" id="L54">                        return new InstanceType(Object.class);</span>
                     }
-<span class="fc" id="L55">                    return new InstanceType(</span>
-<span class="fc" id="L56">                            ((ParameterizedType) targetInjectionPoint.getType()).getActualTypeArguments()[0]);</span>
+<span class="fc" id="L56">                    return new InstanceType(</span>
+<span class="fc" id="L57">                            ((ParameterizedType) targetInjectionPoint.getType()).getActualTypeArguments()[0]);</span>
                 }
 
                 @Override
                 public Set&lt;Annotation&gt; getQualifiers() {
-<span class="fc" id="L61">                    return targetInjectionPoint.getQualifiers();</span>
+<span class="fc" id="L62">                    return targetInjectionPoint.getQualifiers();</span>
                 }
 
                 @Override
                 public Bean&lt;?&gt; getBean() {
-<span class="fc" id="L66">                    return instanceInjectionPoint.getBean();</span>
+<span class="fc" id="L67">                    return instanceInjectionPoint.getBean();</span>
                 }
 
                 @Override
                 public Member getMember() {
-<span class="nc" id="L71">                    return instanceInjectionPoint.getMember();</span>
+<span class="nc" id="L72">                    return instanceInjectionPoint.getMember();</span>
                 }
 
                 @Override
                 public Annotated getAnnotated() {
-<span class="nc" id="L76">                    return instanceInjectionPoint.getAnnotated();</span>
+<span class="nc" id="L77">                    return instanceInjectionPoint.getAnnotated();</span>
                 }
 
                 @Override
                 public boolean isDelegate() {
-<span class="fc" id="L81">                    return false;</span>
+<span class="fc" id="L82">                    return false;</span>
                 }
 
                 @Override
                 public boolean isTransient() {
-<span class="nc" id="L86">                    return false;</span>
+<span class="nc" id="L87">                    return false;</span>
                 }
             }, creationalContext);
-<span class="fc" id="L89">            return ExtendedInstanceProducer.create(beanManager, targetInjectionPoint, instance);</span>
+<span class="fc" id="L90">            return ExtendedInstanceProducer.create(beanManager, targetInjectionPoint, instance);</span>
         });
-<span class="fc" id="L91">    }</span>
+<span class="fc" id="L92">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
