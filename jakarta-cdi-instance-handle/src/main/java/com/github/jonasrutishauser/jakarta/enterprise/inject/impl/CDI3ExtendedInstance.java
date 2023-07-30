@@ -2,6 +2,7 @@ package com.github.jonasrutishauser.jakarta.enterprise.inject.impl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,9 +51,7 @@ class CDI3ExtendedInstance<T> implements ExtendedInstance<T> {
 
     private Set<Annotation> addedQualifiers(Annotation... qualifiers) {
         Set<Annotation> newQualifiers = new HashSet<>(this.qualifiers);
-        for (Annotation qualifier : qualifiers) {
-            newQualifiers.add(qualifier);
-        }
+        Collections.addAll(newQualifiers, qualifiers);
         return newQualifiers;
     }
 

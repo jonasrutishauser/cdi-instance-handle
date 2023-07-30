@@ -13,7 +13,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 class ExtendedInstanceProducer {
 
     @Produces
-    static <T> ExtendedInstance<T> createExtendedInstance(BeanManager beanManager, InjectionPoint injectionPoint, Instance<Object> instance) {
+    static <T> ExtendedInstance<T> createExtendedInstance(InjectionPoint injectionPoint, Instance<Object> instance) {
         throw new IllegalStateException("should not be called");
     }
     

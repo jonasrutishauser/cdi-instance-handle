@@ -31,7 +31,7 @@ class InstanceType implements ParameterizedType {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(types) ^ 0 ^ Instance.class.hashCode();
+        return Arrays.hashCode(types) ^ Instance.class.hashCode();
     }
 
     @Override

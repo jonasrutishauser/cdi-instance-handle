@@ -40,12 +40,13 @@ public class ExtendedInstanceExtension implements Extension {
     void setExtendedInstanceProducer(@Observes ProcessProducer<?, ExtendedInstance<?>> event, BeanManager beanManager) {
         Producer<ExtendedInstance<?>> extendedInstanceProducer = event.getProducer();
         event.configureProducer().produceWith(creationalContext -> {
-            InjectionPoint targetInjectionPoint = (InjectionPoint) beanManager.getInjectableReference(
-                    extendedInstanceProducer.getInjectionPoints().stream()
-                            .filter(ip -> InjectionPoint.class.equals(ip.getType())).findAny().get(),
-                    creationalContext);
+            InjectionPoint targetInjectionPoint = (InjectionPoint) beanManager
+                    .getInjectableReference(extendedInstanceProducer.getInjectionPoints().stream()
+                            .filter(ip -> InjectionPoint.class.equals(ip.getType())).findAny()
+                            .orElseThrow(IllegalStateException::new), creationalContext);
             InjectionPoint instanceInjectionPoint = extendedInstanceProducer.getInjectionPoints().stream()
-                    .filter(ip -> ip.getType() instanceof ParameterizedType).findAny().get();
+                    .filter(ip -> ip.getType() instanceof ParameterizedType).findAny()
+                    .orElseThrow(IllegalStateException::new);
             Instance<?> instance = (Instance<?>) beanManager.getInjectableReference(new InjectionPoint() {
                 @Override
                 public Type getType() {
