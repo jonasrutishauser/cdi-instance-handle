@@ -56,6 +56,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.release.outputs.RELEASED_VERSION }}
-          name: Transactional Event Library ${{ steps.release.outputs.RELEASED_VERSION }}
+          name: CDI Instance Handle ${{ steps.release.outputs.RELEASED_VERSION }}
           body: ${{ github.event.inputs.release-body }}
           token: ${{ github.token }}
