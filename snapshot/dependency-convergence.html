@@ -32,7 +32,7 @@
         <div id="breadcrumbs">
           <ul class="breadcrumb">
         <li id="publishDate" class="pull-right"><span class="divider">|</span> Last Published: 2023-07-30</li>
-          <li id="projectVersion" class="pull-right"><span class="divider">|</span>Version: 1.0.1-SNAPSHOT</li>
+          <li id="projectVersion" class="pull-right"><span class="divider">|</span>Version: 1.0.2-SNAPSHOT</li>
         <li class="pull-right"><a href="http://maven.apache.org/" class="externalLink" title="Maven">Maven</a></li>
           </ul>
         </div>
@@ -45,7 +45,7 @@
     <li><a href="javax-cdi-instance-handle/index.html" title="javax-cdi-instance-handle"><span class="none"></span>javax-cdi-instance-handle</a></li>
     <li><a href="javax-cdi-instance-handle-openwebbeans-it/index.html" title="javax-cdi-instance-handle-openwebbeans-it"><span class="none"></span>javax-cdi-instance-handle-openwebbeans-it</a></li>
     <li><a href="jakarta-cdi-instance-handle/index.html" title="jakarta-cdi-instance-handle"><span class="none"></span>jakarta-cdi-instance-handle</a></li>
-    <li><a href="jakarta-v3-cdi-instance-handle/index.html" title="jakarta-v3-cdi-instance-handle"><span class="none"></span>jakarta-v3-cdi-instance-handle</a></li>
+    <li><a href="jakarta-cdi-instance-handle-v3-it/index.html" title="jakarta-cdi-instance-handle-v3-it"><span class="none"></span>jakarta-cdi-instance-handle-v3-it</a></li>
    <li class="nav-header">Project Documentation</li>
     <li><a href="project-info.html" title="Project Information"><span class="icon-chevron-down"></span>Project Information</a>
      <ul class="nav nav-list">
@@ -92,23 +92,39 @@
 <td>5</td></tr>
 <tr class="b">
 <th>Number of dependencies (NOD):</th>
-<td>47</td></tr>
+<td>94</td></tr>
 <tr class="a">
 <th>Number of unique artifacts (NOA):</th>
-<td>76</td></tr>
+<td>128</td></tr>
 <tr class="b">
 <th>Number of version-conflicting artifacts (NOC):</th>
-<td>3</td></tr>
+<td>6</td></tr>
 <tr class="a">
 <th>Number of SNAPSHOT artifacts (NOS):</th>
 <td>0</td></tr>
 <tr class="b">
 <th>Convergence (NOD/NOA):</th>
-<td><img src="images/icon_error_sml.gif" alt="[Error]" />&#160;<b>61 %</b></td></tr>
+<td><img src="images/icon_error_sml.gif" alt="[Error]" />&#160;<b>73 %</b></td></tr>
 <tr class="a">
 <th>Ready for release (100% convergence and no SNAPSHOTS):</th>
 <td><img src="images/icon_error_sml.gif" alt="[Error]" />&#160;<b>Error</b><br />You do not have 100% convergence.</td></tr></table></section><section>
 <h3><a name="Dependencies_used_in_modules"></a>Dependencies used in modules</h3><section>
+<h4><a name="com.sun.activation:jakarta.activation"></a>com.sun.activation:jakarta.activation</h4>
+<table border="0" class="table table-striped">
+<tr class="a">
+<td><img src="images/icon_error_sml.gif" alt="[Error]" /></td>
+<td>
+<table border="0" class="table table-striped">
+<tr class="b">
+<td width="25%">1.2.1</td>
+<td>
+<ol style="list-style-type: decimal">
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle-v3-it:jar:1.0.2-SNAPSHOT<br />\-&#160;org.apache.tomee:openejb-junit5:jar:9.1.0:test<br />&#160;&#160;&#160;\-&#160;org.apache.tomee:openejb-core:jar:9.1.0:test<br />&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;com.sun.activation:jakarta.activation:jar:1.2.1:test<br /></li><br /></ol></td></tr>
+<tr class="a">
+<td width="25%">2.0.1</td>
+<td>
+<ol style="list-style-type: decimal">
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle-v3-it:jar:1.0.2-SNAPSHOT<br />\-&#160;org.apache.tomee:openejb-junit5:jar:9.1.0:test<br />&#160;&#160;&#160;\-&#160;org.apache.tomee:openejb-core:jar:9.1.0:test<br />&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.apache.tomee.bom:jaxb-runtime:pom:9.1.0:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;+-&#160;jakarta.xml.bind:jakarta.xml.bind-api:jar:3.0.1:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&#160;&#160;\-&#160;com.sun.activation:jakarta.activation:jar:2.0.1:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;+-&#160;org.glassfish.jaxb:jaxb-runtime:jar:3.0.2:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&#160;&#160;+-&#160;com.sun.activation:jakarta.activation:jar:2.0.1:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&#160;&#160;\-&#160;org.glassfish.jaxb:jaxb-core:jar:3.0.2:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&#160;&#160;&#160;&#160;&#160;\-&#160;com.sun.activation:jakarta.activation:jar:2.0.1:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;com.sun.activation:jakarta.activation:jar:2.0.1:test<br /></li><br /></ol></td></tr></table></td></tr></table></section><section>
 <h4><a name="jakarta.el:jakarta.el-api"></a>jakarta.el:jakarta.el-api</h4>
 <table border="0" class="table table-striped">
 <tr class="a">
@@ -119,12 +135,49 @@
 <td width="25%">4.0.0</td>
 <td>
 <ol style="list-style-type: decimal">
-<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:4.0.0.Final:test<br />&#160;&#160;&#160;\-&#160;org.jboss.weld.se:weld-se-core:jar:5.0.0.SP1:test<br />&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.jboss.weld.environment:weld-environment-common:jar:5.0.0.SP1:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.jboss.weld:weld-core-impl:jar:5.0.0.SP1:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;jakarta.el:jakarta.el-api:jar:4.0.0:test<br /></li><br /></ol></td></tr>
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle:jar:1.0.2-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:4.0.0.Final:test<br />&#160;&#160;&#160;\-&#160;org.jboss.weld.se:weld-se-core:jar:5.0.0.SP1:test<br />&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.jboss.weld.environment:weld-environment-common:jar:5.0.0.SP1:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.jboss.weld:weld-core-impl:jar:5.0.0.SP1:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;jakarta.el:jakarta.el-api:jar:4.0.0:test<br /></li><br /></ol></td></tr>
 <tr class="a">
 <td width="25%">5.0.0</td>
 <td>
 <ol style="list-style-type: decimal">
-<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />\-&#160;jakarta.enterprise:jakarta.enterprise.cdi-api:jar:4.0.0:provided<br />&#160;&#160;&#160;\-&#160;jakarta.el:jakarta.el-api:jar:5.0.0:provided<br /></li><br /></ol></td></tr></table></td></tr></table></section><section>
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle:jar:1.0.2-SNAPSHOT<br />\-&#160;jakarta.enterprise:jakarta.enterprise.cdi-api:jar:4.0.0:provided<br />&#160;&#160;&#160;\-&#160;jakarta.el:jakarta.el-api:jar:5.0.0:provided<br /></li><br /></ol></td></tr></table></td></tr></table></section><section>
+<h4><a name="org.apache.commons:commons-pool2"></a>org.apache.commons:commons-pool2</h4>
+<table border="0" class="table table-striped">
+<tr class="a">
+<td><img src="images/icon_error_sml.gif" alt="[Error]" /></td>
+<td>
+<table border="0" class="table table-striped">
+<tr class="b">
+<td width="25%">2.11.1</td>
+<td>
+<ol style="list-style-type: decimal">
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle-v3-it:jar:1.0.2-SNAPSHOT<br />\-&#160;org.apache.tomee:openejb-junit5:jar:9.1.0:test<br />&#160;&#160;&#160;\-&#160;org.apache.tomee:openejb-core:jar:9.1.0:test<br />&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.apache.commons:commons-pool2:jar:2.11.1:test<br /></li><br /></ol></td></tr>
+<tr class="a">
+<td width="25%">2.9.0</td>
+<td>
+<ol style="list-style-type: decimal">
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle-v3-it:jar:1.0.2-SNAPSHOT<br />\-&#160;org.apache.tomee:openejb-junit5:jar:9.1.0:test<br />&#160;&#160;&#160;\-&#160;org.apache.tomee:openejb-core:jar:9.1.0:test<br />&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.apache.openjpa:openjpa:jar:jakarta:3.2.2:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.apache.commons:commons-pool2:jar:2.9.0:test<br /></li><br /></ol></td></tr></table></td></tr></table></section><section>
+<h4><a name="org.apache.xbean:xbean-asm9-shaded"></a>org.apache.xbean:xbean-asm9-shaded</h4>
+<table border="0" class="table table-striped">
+<tr class="a">
+<td><img src="images/icon_error_sml.gif" alt="[Error]" /></td>
+<td>
+<table border="0" class="table table-striped">
+<tr class="b">
+<td width="25%">4.20</td>
+<td>
+<ol style="list-style-type: decimal">
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle-v3-it:jar:1.0.2-SNAPSHOT<br />\-&#160;org.apache.tomee:openejb-junit5:jar:9.1.0:test<br />&#160;&#160;&#160;\-&#160;org.apache.tomee:openejb-core:jar:9.1.0:test<br />&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.apache.openjpa:openjpa:jar:jakarta:3.2.2:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.apache.xbean:xbean-asm9-shaded:jar:4.20:test<br /></li><br /></ol></td></tr>
+<tr class="a">
+<td width="25%">4.21</td>
+<td>
+<ol style="list-style-type: decimal">
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle-v3-it:jar:1.0.2-SNAPSHOT<br />\-&#160;org.apache.tomee:openejb-junit5:jar:9.1.0:test<br />&#160;&#160;&#160;\-&#160;org.apache.tomee:openejb-core:jar:9.1.0:test<br />&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.apache.openwebbeans:openwebbeans-impl:jar:jakarta:2.0.27:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.apache.xbean:xbean-asm9-shaded:jar:4.21:test<br /></li><br /></ol></td></tr>
+<tr class="b">
+<td width="25%">4.23</td>
+<td>
+<ol style="list-style-type: decimal">
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle-v3-it:jar:1.0.2-SNAPSHOT<br />\-&#160;org.apache.tomee:openejb-junit5:jar:9.1.0:test<br />&#160;&#160;&#160;\-&#160;org.apache.tomee:openejb-core:jar:9.1.0:test<br />&#160;&#160;&#160;&#160;&#160;&#160;+-&#160;org.apache.xbean:xbean-asm9-shaded:jar:4.23:test<br />&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.apache.xbean:xbean-finder-shaded:jar:4.23:test<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\-&#160;org.apache.xbean:xbean-asm9-shaded:jar:4.23:test<br /></li><br /></ol></td></tr></table></td></tr></table></section><section>
 <h4><a name="org.junit.jupiter:junit-jupiter-api"></a>org.junit.jupiter:junit-jupiter-api</h4>
 <table border="0" class="table table-striped">
 <tr class="a">
@@ -135,20 +188,20 @@
 <td width="25%">5.10.0</td>
 <td>
 <ol style="list-style-type: decimal">
-<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />+-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.10.0:test<br />\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.10.0:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.10.0:test<br /></li><br />
-<li>com.github.jonasrutishauser:jakarta-v3-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />+-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.10.0:test<br />\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.10.0:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.10.0:test<br /></li><br />
-<li>com.github.jonasrutishauser:javax-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />+-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.10.0:test<br />\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.10.0:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.10.0:test<br /></li><br /></ol></td></tr>
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle-v3-it:jar:1.0.2-SNAPSHOT<br />+-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.10.0:test<br />\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.10.0:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.10.0:test<br /></li><br />
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle:jar:1.0.2-SNAPSHOT<br />+-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.10.0:test<br />\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.10.0:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.10.0:test<br /></li><br />
+<li>com.github.jonasrutishauser:javax-cdi-instance-handle:jar:1.0.2-SNAPSHOT<br />+-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.10.0:test<br />\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.10.0:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.10.0:test<br /></li><br /></ol></td></tr>
 <tr class="a">
 <td width="25%">5.4.1</td>
 <td>
 <ol style="list-style-type: decimal">
-<li>com.github.jonasrutishauser:javax-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:2.0.2.Final:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.4.1:test<br /></li><br /></ol></td></tr>
+<li>com.github.jonasrutishauser:javax-cdi-instance-handle:jar:1.0.2-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:2.0.2.Final:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.4.1:test<br /></li><br /></ol></td></tr>
 <tr class="b">
 <td width="25%">5.8.2</td>
 <td>
 <ol style="list-style-type: decimal">
-<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:4.0.0.Final:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.8.2:test<br /></li><br />
-<li>com.github.jonasrutishauser:jakarta-v3-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:3.1.0.Final:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.8.2:test<br /></li><br /></ol></td></tr></table></td></tr></table></section><section>
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle-v3-it:jar:1.0.2-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:3.1.0.Final:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.8.2:test<br /></li><br />
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle:jar:1.0.2-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:4.0.0.Final:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-api:jar:5.8.2:test<br /></li><br /></ol></td></tr></table></td></tr></table></section><section>
 <h4><a name="org.junit.jupiter:junit-jupiter-engine"></a>org.junit.jupiter:junit-jupiter-engine</h4>
 <table border="0" class="table table-striped">
 <tr class="a">
@@ -159,20 +212,20 @@
 <td width="25%">5.10.0</td>
 <td>
 <ol style="list-style-type: decimal">
-<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.10.0:test<br /></li><br />
-<li>com.github.jonasrutishauser:jakarta-v3-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.10.0:test<br /></li><br />
-<li>com.github.jonasrutishauser:javax-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.10.0:test<br /></li><br /></ol></td></tr>
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle-v3-it:jar:1.0.2-SNAPSHOT<br />\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.10.0:test<br /></li><br />
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle:jar:1.0.2-SNAPSHOT<br />\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.10.0:test<br /></li><br />
+<li>com.github.jonasrutishauser:javax-cdi-instance-handle:jar:1.0.2-SNAPSHOT<br />\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.10.0:test<br /></li><br /></ol></td></tr>
 <tr class="a">
 <td width="25%">5.4.1</td>
 <td>
 <ol style="list-style-type: decimal">
-<li>com.github.jonasrutishauser:javax-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:2.0.2.Final:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.4.1:test<br /></li><br /></ol></td></tr>
+<li>com.github.jonasrutishauser:javax-cdi-instance-handle:jar:1.0.2-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:2.0.2.Final:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.4.1:test<br /></li><br /></ol></td></tr>
 <tr class="b">
 <td width="25%">5.8.2</td>
 <td>
 <ol style="list-style-type: decimal">
-<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:4.0.0.Final:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.8.2:test<br /></li><br />
-<li>com.github.jonasrutishauser:jakarta-v3-cdi-instance-handle:jar:1.0.1-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:3.1.0.Final:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.8.2:test<br /></li><br /></ol></td></tr></table></td></tr></table></section></section>
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle-v3-it:jar:1.0.2-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:3.1.0.Final:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.8.2:test<br /></li><br />
+<li>com.github.jonasrutishauser:jakarta-cdi-instance-handle:jar:1.0.2-SNAPSHOT<br />\-&#160;org.jboss.weld:weld-junit5:jar:4.0.0.Final:test<br />&#160;&#160;&#160;\-&#160;org.junit.jupiter:junit-jupiter-engine:jar:5.8.2:test<br /></li><br /></ol></td></tr></table></td></tr></table></section></section>
         </main>
       </div>
     </div>
