@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.github.jonasrutishauser</groupId>
 		<artifactId>cdi-instance-handle</artifactId>
-		<version>1.0.2-SNAPSHOT</version>
+		<version>1.0.2</version>
 	</parent>
 
 	<artifactId>javax-cdi-instance-handle-openwebbeans-it</artifactId>
