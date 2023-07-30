@@ -7,7 +7,7 @@
 		<version>1.0.2-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>jakarta-v3-cdi-instance-handle</artifactId>
+	<artifactId>jakarta-cdi-instance-handle-v3-it</artifactId>
 
 	<properties>
 		<maven.deploy.skip>true</maven.deploy.skip>
@@ -43,6 +43,13 @@
 			<artifactId>jakarta-cdi-instance-handle</artifactId>
 			<version>${project.version}</version>
 			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomee</groupId>
+			<artifactId>openejb-junit5</artifactId>
+			<version>9.1.0</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

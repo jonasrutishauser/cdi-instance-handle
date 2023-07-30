@@ -1,15 +1,19 @@
 package com.github.jonasrutishauser.jakarta.enterprise.inject.impl;
 
+import static jakarta.interceptor.Interceptor.Priority.LIBRARY_BEFORE;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import com.github.jonasrutishauser.jakarta.enterprise.inject.ExtendedInstance;
 
+import jakarta.annotation.Priority;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 
+@Priority(LIBRARY_BEFORE)
 class ExtendedInstanceProducer {
 
     private static final boolean CDI_4 = isCdiVersionAtLeast4();

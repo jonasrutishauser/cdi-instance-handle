@@ -6,14 +6,18 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.github.jonasrutishauser.jakarta.enterprise.inject.ExtendedInstance;
 
 import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.Annotated;
 import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanAttributes;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
@@ -21,10 +25,15 @@ import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.spi.ProcessBeanAttributes;
 import jakarta.enterprise.inject.spi.ProcessInjectionPoint;
 import jakarta.enterprise.inject.spi.ProcessProducer;
-import jakarta.enterprise.inject.spi.Producer;
 
 public class ExtendedInstanceExtension implements Extension {
     private Set<Annotation> qualifiers = new HashSet<>();
+
+    @SuppressWarnings("rawtypes")
+    private BeanAttributes<ExtendedInstance> producerAttributes;
+    private Set<InjectionPoint> producerInjectionPoints;
+    @SuppressWarnings("rawtypes")
+    private Function<CreationalContext<ExtendedInstance>, ExtendedInstance> producerFunction;
 
     void addProducer(@Observes BeforeBeanDiscovery event) {
         event.addAnnotatedType(ExtendedInstanceProducer.class, ExtendedInstanceProducer.class.getName())
@@ -36,19 +45,20 @@ public class ExtendedInstanceExtension implements Extension {
     }
 
     void addAllQualifiers(@SuppressWarnings("rawtypes") @Observes ProcessBeanAttributes<ExtendedInstance> event) {
-        event.configureBeanAttributes().qualifiers(qualifiers);
+        producerAttributes = event.getBeanAttributes();
+        event.configureBeanAttributes().qualifiers(new HashSet<>(qualifiers));
+        qualifiers.clear();
     }
 
     void setExtendedInstanceProducer(@SuppressWarnings("rawtypes") @Observes ProcessProducer<?, ExtendedInstance> event,
             BeanManager beanManager) {
-        @SuppressWarnings("rawtypes")
-        Producer<ExtendedInstance> extendedInstanceProducer = event.getProducer();
-        event.configureProducer().produceWith(creationalContext -> {
-            InjectionPoint targetInjectionPoint = (InjectionPoint) beanManager
-                    .getInjectableReference(extendedInstanceProducer.getInjectionPoints().stream()
-                            .filter(ip -> InjectionPoint.class.equals(ip.getType())).findAny()
-                            .orElseThrow(IllegalStateException::new), creationalContext);
-            InjectionPoint instanceInjectionPoint = extendedInstanceProducer.getInjectionPoints().stream()
+        producerInjectionPoints = event.getProducer().getInjectionPoints();
+        producerFunction = creationalContext -> {
+            InjectionPoint targetInjectionPoint = (InjectionPoint) beanManager.getInjectableReference(
+                    producerInjectionPoints.stream().filter(ip -> InjectionPoint.class.equals(ip.getType())).findAny()
+                            .orElseThrow(IllegalStateException::new),
+                    creationalContext);
+            InjectionPoint instanceInjectionPoint = producerInjectionPoints.stream()
                     .filter(ip -> ip.getType() instanceof ParameterizedType).findAny()
                     .orElseThrow(IllegalStateException::new);
             Instance<?> instance = (Instance<?>) beanManager.getInjectableReference(new InjectionPoint() {
@@ -92,6 +102,15 @@ public class ExtendedInstanceExtension implements Extension {
                 }
             }, creationalContext);
             return ExtendedInstanceProducer.create(beanManager, targetInjectionPoint, instance);
-        });
+        };
+        event.configureProducer().produceWith(producerFunction);
+    }
+
+    void addAdditionalProducer(@Observes AfterBeanDiscovery event) {
+        if (!qualifiers.isEmpty()) {
+            // Add additional producer for missed qualifiers with OpenWebBeans
+            event.addBean().read(producerAttributes).qualifiers(qualifiers).injectionPoints(producerInjectionPoints)
+                    .beanClass(ExtendedInstanceProducer.class).alternative(true).createWith(producerFunction);
+        }
     }
 }

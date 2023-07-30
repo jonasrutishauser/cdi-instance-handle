@@ -11,6 +11,7 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.AnnotatedConstructor;
 import javax.enterprise.inject.spi.AnnotatedField;
@@ -32,6 +33,11 @@ import com.github.jonasrutishauser.javax.enterprise.inject.ExtendedInstance;
 
 public class ExtendedInstanceExtension implements Extension {
     private final Set<Annotation> qualifiers = new HashSet<>();
+
+    @SuppressWarnings("rawtypes")
+    private BeanAttributes<ExtendedInstance> producerAttributes;
+    @SuppressWarnings("rawtypes")
+    private Producer<ExtendedInstance> producer;
 
     void addProducer(@Observes BeforeBeanDiscovery event, BeanManager beanManager) {
         AnnotatedType<ExtendedInstanceProducer> annotatedType = beanManager
@@ -95,46 +101,46 @@ public class ExtendedInstanceExtension implements Extension {
 
     @SuppressWarnings("rawtypes")
     void addAllQualifiers(@Observes ProcessBeanAttributes<ExtendedInstance> event) {
-        if (!qualifiers.isEmpty()) {
-            BeanAttributes<ExtendedInstance> beanAttributes = event.getBeanAttributes();
-            event.setBeanAttributes(new BeanAttributes<ExtendedInstance>() {
-                @Override
-                public boolean isAlternative() {
-                    return beanAttributes.isAlternative();
-                }
-    
-                @Override
-                public Set<Type> getTypes() {
-                    return beanAttributes.getTypes();
-                }
-    
-                @Override
-                public Set<Class<? extends Annotation>> getStereotypes() {
-                    return beanAttributes.getStereotypes();
-                }
-    
-                @Override
-                public Class<? extends Annotation> getScope() {
-                    return beanAttributes.getScope();
-                }
-    
-                @Override
-                public Set<Annotation> getQualifiers() {
-                    return qualifiers;
-                }
-    
-                @Override
-                public String getName() {
-                    return beanAttributes.getName();
-                }
-            });
-        }
+        Set<Annotation> currentQualifiers = new HashSet<>(qualifiers);
+        qualifiers.clear();
+        producerAttributes = event.getBeanAttributes();
+        event.setBeanAttributes(new BeanAttributes<ExtendedInstance>() {
+            @Override
+            public boolean isAlternative() {
+                return producerAttributes.isAlternative();
+            }
+
+            @Override
+            public Set<Type> getTypes() {
+                return producerAttributes.getTypes();
+            }
+
+            @Override
+            public Set<Class<? extends Annotation>> getStereotypes() {
+                return producerAttributes.getStereotypes();
+            }
+
+            @Override
+            public Class<? extends Annotation> getScope() {
+                return producerAttributes.getScope();
+            }
+
+            @Override
+            public Set<Annotation> getQualifiers() {
+                return currentQualifiers;
+            }
+
+            @Override
+            public String getName() {
+                return producerAttributes.getName();
+            }
+        });
     }
 
     @SuppressWarnings("rawtypes")
     void setExtendedInstanceProducer(@Observes ProcessProducer<?, ExtendedInstance> event, BeanManager beanManager) {
         Producer<ExtendedInstance> extendedInstanceProducer = event.getProducer();
-        event.setProducer(new Producer<ExtendedInstance>() {
+        producer = new Producer<ExtendedInstance>() {
             @Override
             public ExtendedInstance<?> produce(CreationalContext<ExtendedInstance> ctx) {
                 InjectionPoint targetInjectionPoint = (InjectionPoint) beanManager
@@ -196,8 +202,71 @@ public class ExtendedInstanceExtension implements Extension {
             public void dispose(ExtendedInstance instance) {
                 extendedInstanceProducer.dispose(instance);
             }
-        });
+        };
+        event.setProducer(producer);
     }
+
+    @SuppressWarnings("rawtypes")
+    void addAdditionalProducer(@Observes AfterBeanDiscovery event) {
+        if (!qualifiers.isEmpty()) {
+            // Add additional producer for missed qualifiers with OpenWebBeans
+            event.addBean(new Bean<ExtendedInstance>() {
+                @Override
+                public ExtendedInstance create(CreationalContext<ExtendedInstance> creationalContext) {
+                    return producer.produce(creationalContext);
+                }
+    
+                @Override
+                public void destroy(ExtendedInstance instance, CreationalContext<ExtendedInstance> creationalContext) {
+                    producer.dispose(instance);
+                }
+    
+                @Override
+                public Set<Type> getTypes() {
+                    return producerAttributes.getTypes();
+                }
+    
+                @Override
+                public Set<Annotation> getQualifiers() {
+                    return qualifiers;
+                }
+    
+                @Override
+                public Class<? extends Annotation> getScope() {
+                    return producerAttributes.getScope();
+                }
+    
+                @Override
+                public String getName() {
+                    return producerAttributes.getName();
+                }
+    
+                @Override
+                public Set<Class<? extends Annotation>> getStereotypes() {
+                    return producerAttributes.getStereotypes();
+                }
+    
+                @Override
+                public boolean isAlternative() {
+                    return false;
+                }
+    
+                @Override
+                public Class<?> getBeanClass() {
+                    return ExtendedInstanceProducer.class;
+                }
+    
+                @Override
+                public Set<InjectionPoint> getInjectionPoints() {
+                    return producer.getInjectionPoints();
+                }
+    
+                @Override
+                public boolean isNullable() {
+                    return false;
+                }});
+        }
+    }  
 
     private static class DependentLiteral extends AnnotationLiteral<Dependent> implements Dependent {
         private static final Dependent INSTANCE = new DependentLiteral();

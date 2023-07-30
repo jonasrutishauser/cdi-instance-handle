@@ -23,7 +23,7 @@
 		<module>javax-cdi-instance-handle</module>
 		<module>javax-cdi-instance-handle-openwebbeans-it</module>
 		<module>jakarta-cdi-instance-handle</module>
-		<module>jakarta-v3-cdi-instance-handle</module>
+		<module>jakarta-cdi-instance-handle-v3-it</module>
 	</modules>
 
 	<scm>

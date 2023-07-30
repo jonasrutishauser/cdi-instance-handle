@@ -9,6 +9,10 @@
 
 	<artifactId>javax-cdi-instance-handle-openwebbeans-it</artifactId>
 
+	<properties>
+		<maven.deploy.skip>true</maven.deploy.skip>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -52,9 +56,6 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore><!-- tests sometimes fail with github actions -->
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
