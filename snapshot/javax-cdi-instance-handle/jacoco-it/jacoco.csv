@@ -8,5 +8,5 @@ javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.im
 javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,ExtendedInstanceProducer,5,22,0,2,1,4,1,2,1,1
 javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,ExtendedInstanceExtension.new AnnotatedType() {...},2,70,2,4,0,14,2,11,0,10
 javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,ExtendedInstanceExtension.new BeanAttributes() {...},0,37,0,0,0,7,0,7,0,7
-javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,ExtendedInstanceExtension.new Producer() {...},0,75,0,0,0,13,0,6,0,6
 javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,CDIExtendedInstance.HandleImpl,0,61,2,4,0,12,2,6,0,5
+javax-cdi-instance-handle,com.github.jonasrutishauser.javax.enterprise.inject.impl,ExtendedInstanceExtension.new Producer() {...},0,75,0,0,0,13,0,6,0,6
