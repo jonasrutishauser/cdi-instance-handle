@@ -107,10 +107,10 @@ import jakarta.enterprise.inject.spi.ProcessProducer;
 <span class="fc" id="L107">    }</span>
 
     void addAdditionalProducer(@Observes AfterBeanDiscovery event) {
-<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (!qualifiers.isEmpty()) {</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (!qualifiers.isEmpty()) {</span>
             // Add additional producer for missed qualifiers with OpenWebBeans
-<span class="fc" id="L112">            event.addBean().read(producerAttributes).qualifiers(qualifiers).injectionPoints(producerInjectionPoints)</span>
-<span class="fc" id="L113">                    .beanClass(ExtendedInstanceProducer.class).alternative(true).createWith(producerFunction);</span>
+<span class="nc" id="L112">            event.addBean().read(producerAttributes).qualifiers(qualifiers).injectionPoints(producerInjectionPoints)</span>
+<span class="nc" id="L113">                    .beanClass(ExtendedInstanceProducer.class).alternative(true).createWith(producerFunction);</span>
         }
 <span class="fc" id="L115">    }</span>
 }
