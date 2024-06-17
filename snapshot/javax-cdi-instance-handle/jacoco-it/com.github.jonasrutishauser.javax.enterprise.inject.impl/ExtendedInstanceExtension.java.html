@@ -208,57 +208,57 @@ import com.github.jonasrutishauser.javax.enterprise.inject.ExtendedInstance;
 
     @SuppressWarnings(&quot;rawtypes&quot;)
     void addAdditionalProducer(@Observes AfterBeanDiscovery event) {
-<span class="fc bfc" id="L211" title="All 2 branches covered.">        if (!qualifiers.isEmpty()) {</span>
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">        if (!qualifiers.isEmpty()) {</span>
             // Add additional producer for missed qualifiers with OpenWebBeans
-<span class="fc" id="L213">            event.addBean(new Bean&lt;ExtendedInstance&gt;() {</span>
+<span class="nc" id="L213">            event.addBean(new Bean&lt;ExtendedInstance&gt;() {</span>
                 @Override
                 public ExtendedInstance create(CreationalContext&lt;ExtendedInstance&gt; creationalContext) {
-<span class="fc" id="L216">                    return producer.produce(creationalContext);</span>
+<span class="nc" id="L216">                    return producer.produce(creationalContext);</span>
                 }
     
                 @Override
                 public void destroy(ExtendedInstance instance, CreationalContext&lt;ExtendedInstance&gt; creationalContext) {
-<span class="fc" id="L221">                    producer.dispose(instance);</span>
-<span class="fc" id="L222">                }</span>
+<span class="nc" id="L221">                    producer.dispose(instance);</span>
+<span class="nc" id="L222">                }</span>
     
                 @Override
                 public Set&lt;Type&gt; getTypes() {
-<span class="fc" id="L226">                    return producerAttributes.getTypes();</span>
+<span class="nc" id="L226">                    return producerAttributes.getTypes();</span>
                 }
     
                 @Override
                 public Set&lt;Annotation&gt; getQualifiers() {
-<span class="fc" id="L231">                    return qualifiers;</span>
+<span class="nc" id="L231">                    return qualifiers;</span>
                 }
     
                 @Override
                 public Class&lt;? extends Annotation&gt; getScope() {
-<span class="fc" id="L236">                    return producerAttributes.getScope();</span>
+<span class="nc" id="L236">                    return producerAttributes.getScope();</span>
                 }
     
                 @Override
                 public String getName() {
-<span class="fc" id="L241">                    return producerAttributes.getName();</span>
+<span class="nc" id="L241">                    return producerAttributes.getName();</span>
                 }
     
                 @Override
                 public Set&lt;Class&lt;? extends Annotation&gt;&gt; getStereotypes() {
-<span class="fc" id="L246">                    return producerAttributes.getStereotypes();</span>
+<span class="nc" id="L246">                    return producerAttributes.getStereotypes();</span>
                 }
     
                 @Override
                 public boolean isAlternative() {
-<span class="fc" id="L251">                    return false;</span>
+<span class="nc" id="L251">                    return false;</span>
                 }
     
                 @Override
                 public Class&lt;?&gt; getBeanClass() {
-<span class="fc" id="L256">                    return ExtendedInstanceProducer.class;</span>
+<span class="nc" id="L256">                    return ExtendedInstanceProducer.class;</span>
                 }
     
                 @Override
                 public Set&lt;InjectionPoint&gt; getInjectionPoints() {
-<span class="fc" id="L261">                    return producer.getInjectionPoints();</span>
+<span class="nc" id="L261">                    return producer.getInjectionPoints();</span>
                 }
     
                 @Override
